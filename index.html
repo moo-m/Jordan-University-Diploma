@@ -7,7 +7,7 @@
 
 <style>
 
-/* ========== ROOT ========== /
+/* ========== ROOT ========== */
 :root {
     --primary: #2563eb;
     --secondary: #16a34a;
@@ -18,7 +18,6 @@
     --border: #e2e8f0;
 }
 
-/ DARK MODE /
 body.dark {
     --bg: #0f172a;
     --text: #f1f5f9;
@@ -26,7 +25,6 @@ body.dark {
     --border: #334155;
 }
 
-/ RESET /
 * {
     box-sizing: border-box;
     margin: 0;
@@ -39,14 +37,12 @@ body {
     color: var(--text);
 }
 
-/ CONTAINER /
 .app-container {
     max-width: 1100px;
     margin: auto;
     padding: 20px;
 }
 
-/ HERO /
 .hero {
     text-align: center;
     margin-bottom: 30px;
@@ -72,7 +68,7 @@ body {
     opacity: 0.7;
 }
 
-/ CARD /
+
 .card {
     background: var(--card);
     border-radius: 12px;
@@ -80,7 +76,7 @@ body {
     border: 1px solid var(--border);
 }
 
-/ CHAPTERS /
+
 .chapters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
@@ -103,7 +99,7 @@ body {
     transform: translateY(-2px);
 }
 
-/ QUIZ /
+
 .quiz-header {
     display: flex;
     justify-content: space-between;
@@ -111,7 +107,7 @@ body {
     margin-bottom: 15px;
 }
 
-/ QUESTION /
+
 .question-card {
     background: var(--card);
     padding: 20px;
@@ -124,7 +120,7 @@ body {
     margin-bottom: 20px;
 }
 
-/ OPTIONS /
+
 .options-grid {
     display: grid;
     gap: 10px;
@@ -153,7 +149,6 @@ body {
     color: white;
 }
 
-/ FOOTER /
 .quiz-footer {
     display: flex;
     justify-content: space-between;
@@ -177,7 +172,7 @@ button {
     color: white;
 }
 
-/ SIDEBAR /
+
 .quiz-layout {
     display: flex;
     gap: 15px;
@@ -205,12 +200,11 @@ button {
 .nav-num.wrong { background: var(--danger); color:white; }
 .nav-num.current { border:2px solid var(--primary); }
 
-/ RESULT /
 .result-card {
     text-align: center;
 }
 
-/ RESPONSIVE /
+
 @media (max-width: 900px) {
     .quiz-layout { flex-direction: column; }
     .sidebar { width: 100%; order: 2; }
@@ -224,7 +218,7 @@ button {
     .quiz-footer { flex-direction: column; gap: 10px; }
 }
 
-/ DARK BUTTON /
+
 .dark-toggle {
     position: fixed;
     top: 10px;
