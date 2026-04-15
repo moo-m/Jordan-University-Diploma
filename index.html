@@ -1,396 +1,617 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تطبيق الاختبارات</title>
+<title>منصة الاختبارات التربوية </title>
+<!-- استدعاء خط عربي أنيق -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
-/* ========== ROOT ========== */
+/* ========== المتغيرات والجذور ========== */
 :root {
-    --primary: #2563eb;
-    --secondary: #16a34a;
-    --danger: #dc2626;
-    --bg: #f8fafc;
-    --text: #0f172a;
-    --card: #ffffff;
-    --border: #e2e8f0;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary: #10b981;
+    --danger: #ef4444;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 12px;
 }
 
 body.dark {
-    --bg: #0f172a;
-    --text: #f1f5f9;
-    --card: #1e293b;
-    --border: #334155;
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+    --secondary: #10b981;
+    --danger: #f87171;
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
 }
 
+/* ========== الإعدادات العامة ========== */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: system-ui, sans-serif;
+    font-family: 'Cairo', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
-    background: var(--bg);
-    color: var(--text);
-}
-
-.app-container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-}
-
-.hero {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.logos {
+    background: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    flex-direction: column;
 }
 
-.logos img {
-    width: 70px;
-}
-
-.main-title {
-    font-size: 1.6rem;
-    margin-top: 10px;
-    color: var(--primary);
-}
-
-.subtitle {
-    opacity: 0.7;
-}
-
-
-.card {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid var(--border);
-}
-
-
-.chapters-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-    gap: 15px;
-}
-
-.chapter-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    padding: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.25s;
-    font-weight: bold;
-}
-
-.chapter-btn:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-
-.quiz-header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    padding: 10px 5%;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    z-index: 100;
 }
 
-
-.question-card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-}
-
-.question-text {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-}
-
-
-.options-grid {
-    display: grid;
-    gap: 10px;
-}
-
-.option-btn {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.option-btn:hover {
-    border-color: var(--primary);
-    background: rgba(37,99,235,0.05);
-}
-
-.option-btn.correct {
-    background: var(--secondary);
-    color: white;
-}
-
-.option-btn.wrong {
-    background: var(--danger);
-    color: white;
-}
-
-.quiz-footer {
+.header-brand {
     display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-
-button {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-.primary {
-    background: var(--primary);
-    color: white;
-}
-
-.secondary {
-    background: #64748b;
-    color: white;
-}
-
-
-.quiz-layout {
-    display: flex;
+    align-items: center;
     gap: 15px;
 }
 
-.sidebar {
-    width: 220px;
+.logo-small {
+    height: 45px;
+    width: auto;
 }
 
+.header-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.app-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+    flex: 1;
+    width: 100%;
+}
+
+/* ========== الشاشات ========== */
+.screen {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== شاشة البداية ========== */
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.hero-logos img {
+    height: 100px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.main-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.section-title {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--primary);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.chapter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+}
+
+.chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 4px;
+    background: var(--primary);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.chapter-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.chapter-card:hover::before {
+    transform: scaleY(1);
+}
+
+.chapter-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* ========== شاشة الاختبار ========== */
+.quiz-layout {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.main-quiz-area {
+    flex: 1;
+}
+
+.sidebar {
+    width: 250px;
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 20px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 4px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.question-card {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+
+.options-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.option-btn {
+    width: 100%;
+    text-align: right;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    border-radius: var(--radius);
+    border: 2px solid var(--border-color);
+    background: var(--bg-main);
+    color: var(--text-main);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.option-btn.correct { background: rgba(16, 185, 129, 0.1); border-color: var(--secondary); color: var(--secondary); }
+.option-btn.wrong { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: var(--danger); }
+
+.option-letter {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--border-color);
+    margin-left: 15px;
+    font-size: 0.9rem;
+}
+
+.option-btn.correct .option-letter { background: var(--secondary); color: white; }
+.option-btn.wrong .option-letter { background: var(--danger); color: white; }
+
+/* ========== الأزرار ========== */
+.btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: transparent; border: 2px solid var(--border-color); color: var(--text-main); }
+
+/* ========== وضع التحميل ========== */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--border-color);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== شاشة التنقل ========== */
 .question-nav-grid {
     display: grid;
-    grid-template-columns: repeat(5,1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
 }
 
 .nav-num {
-    text-align: center;
-    padding: 8px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 6px;
-    background: #e2e8f0;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
     cursor: pointer;
+    font-weight: 600;
 }
 
-.nav-num.correct { background: var(--secondary); color:white; }
-.nav-num.wrong { background: var(--danger); color:white; }
-.nav-num.current { border:2px solid var(--primary); }
+.nav-num.current { border: 2px solid var(--primary); }
+.nav-num.answered-correct { background: var(--secondary); color: white; }
+.nav-num.answered-wrong { background: var(--danger); color: white; }
 
+/* ========== النتائج ========== */
 .result-card {
+    background: var(--bg-card);
+    padding: 40px 20px;
+    border-radius: var(--radius);
     text-align: center;
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-
-@media (max-width: 900px) {
-    .quiz-layout { flex-direction: column; }
-    .sidebar { width: 100%; order: 2; }
-    .question-nav-grid { grid-template-columns: repeat(10,1fr); }
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 10px solid var(--border-color);
 }
 
-@media (max-width: 500px) {
-    .main-title { font-size: 1.2rem; }
-    .question-text { font-size: 1rem; }
-    button { width: 100%; }
-    .quiz-footer { flex-direction: column; gap: 10px; }
-}
+.score-text { font-size: 2.5rem; font-weight: 800; }
 
-
-.dark-toggle {
-    position: fixed;
-    top: 10px;
-    left: 10px;
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
     cursor: pointer;
+    color: var(--text-main);
 }
 
+@media (max-width: 768px) {
+    .quiz-layout { flex-direction: column; }
+    .sidebar { width: 100%; order: -1; position: static; }
+    .hero-logos img { height: 60px; }
+}
 </style>
 </head>
 
 <body>
 
-<button class="dark-toggle">🌙</button>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>جاري تحميل بنك الأسئلة...</p>
+</div>
+
+<header>
+    <div class="header-brand">
+        <!-- شعار الجامعة الأردنية -->
+        <img src="ju-logo.png" alt="University of Jordan Logo" class="logo-small" onerror="this.src='https://via.placeholder.com/50?text=JU'">
+        <div class="header-title">منصة الاختبارات الرقمية</div>
+    </div>
+    <button class="theme-toggle" id="theme-btn">🌙</button>
+</header>
 
 <div class="app-container">
 
-<!-- START -->
-<section id="start-screen" class="screen active">
+    <!-- شاشة البداية -->
+    <section id="start-screen" class="screen active">
+        <div class="hero">
+            <div class="hero-logos">
+                <img src="diploma-logo.png" alt="University of Jordan Logo" onerror="this.src='https://via.placeholder.com/100?text=JU'">
+                <!-- شعار افتراضي للدبلوم العالي -->
+                <div style="width: 100px; height: 100px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.5rem; text-align: center; line-height: 1;">دبلوم<br>المعلمين</div>
+            </div>
+            <h1 class="main-title">مراجعة النظام التربوي في الأردن</h1>
+            <p class="subtitle">الدبلوم العالي لإعداد المعلمين - الجامعة الأردنية</p>
+        </div>
+        
+        <h2 class="section-title">اختر الفصل الدراسي</h2>
+        <div id="chapters-list" class="chapters-grid"></div>
+    </section>
 
-<div class="hero">
-    <div class="logos">
-        <img src="ju-logo.png">
-        <img src="diploma-logo.png">
-    </div>
+    <!-- شاشة الاختبار -->
+    <section id="quiz-screen" class="screen">
+        <div class="quiz-layout">
+            <div class="main-quiz-area">
+                <div class="quiz-header-info">
+                    <h2 id="current-chapter-title" class="section-title" style="font-size: 1.1rem;"></h2>
+                    <p style="color: var(--text-muted);">سؤال <span id="current-q-num">1</span> من <span id="total-q-num">?</span></p>
+                    <div class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
 
-    <h1 class="main-title">مراجعة امتحان النظام التربوي في الأردن</h1>
-    <p class="subtitle">الدبلوم العالي لإعداد المعلمين – الجامعة الأردنية</p>
-</div>
+                <div class="question-card">
+                    <h3 id="question-text" style="font-size: 1.3rem; margin-bottom: 25px;"></h3>
+                    <div id="options-container" class="options-grid"></div>
+                </div>
 
-<h2>اختر فصلاً للبدء</h2>
-<div id="chapters-list" class="chapters-grid"></div>
+                <div class="quiz-footer" style="display: flex; justify-content: space-between;">
+                    <button id="prev-btn" class="btn btn-secondary">السابق</button>
+                    <div>
+                        <button id="next-btn" class="btn btn-primary">التالي</button>
+                        <button id="finish-btn" class="btn btn-primary" style="display:none; background: var(--secondary);">إنهاء وتسليم</button>
+                    </div>
+                </div>
+            </div>
 
-</section>
+            <div class="sidebar">
+                <h3 style="margin-bottom: 15px; font-size: 1rem;">التنقل السريع</h3>
+                <div id="question-nav-grid" class="question-nav-grid"></div>
+            </div>
+        </div>
+    </section>
 
-<!-- QUIZ -->
-<section id="quiz-screen" class="screen">
-    <h2 id="current-chapter-title"></h2>
-    <p>سؤال <span id="current-q-num"></span> من <span id="total-q-num"></span></p>
-
-    <div class="question-card">
-        <p id="question-text" class="question-text"></p>
-        <div id="options-container" class="options-grid"></div>
-    </div>
-
-    <div class="quiz-footer">
-        <button id="prev-btn" class="secondary">السابق</button>
-        <button id="next-btn" class="primary">التالي</button>
-    </div>
-</section>
-
-<!-- RESULT -->
-<section id="result-screen" class="screen">
-    <div class="card result-card">
-        <h2>النتيجة</h2>
-        <p>✔ صحيح: <span id="total-correct"></span></p>
-        <p>❌ خطأ: <span id="total-wrong"></span></p>
-        <p>📊 النسبة: <span id="percentage"></span></p>
-    </div>
-</section>
+    <!-- شاشة النتيجة -->
+    <section id="result-screen" class="screen">
+        <div class="result-card">
+            <h2>نتيجتك النهائية</h2>
+            <div class="score-circle" id="score-circle">
+                <span class="score-text" id="percentage">0%</span>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-bottom: 30px;">
+                <div><h3 id="total-correct" style="color: var(--secondary);">0</h3><p>صحيحة</p></div>
+                <div><h3 id="total-wrong" style="color: var(--danger);">0</h3><p>خاطئة</p></div>
+            </div>
+            <button onclick="location.reload()" class="btn btn-primary" style="width: 100%;">العودة للرئيسية</button>
+        </div>
+    </section>
 
 </div>
 
 <script>
-
-// DARK MODE
-document.querySelector('.dark-toggle').onclick = () =>
-    document.body.classList.toggle('dark');
-
-// DATA
 let examBank = [];
-let currentChapter, currentQuestions, currentIndex, answers;
+let currentQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
 
-// LOAD JSON
-fetch('data.json')
-.then(res => res.json())
-.then(data => {
-    examBank = data.exam_bank;
-    renderChapters();
-});
+// وظيفة جلب البيانات مع نظام Exponential Backoff
+async function fetchData(url, retries = 5, delay = 1000) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return await response.json();
+    } catch (error) {
+        if (retries > 0) {
+            await new Promise(res => setTimeout(res, delay));
+            return fetchData(url, retries - 1, delay * 2);
+        }
+        throw error;
+    }
+}
 
-// CHAPTERS
-function renderChapters(){
-    const c = document.getElementById('chapters-list');
-    c.innerHTML='';
-    examBank.forEach((ch,i)=>{
-        const b=document.createElement('button');
-        b.textContent=ch.chapter;
-        b.className='chapter-btn';
-        b.onclick=()=>startQuiz(i);
-        c.appendChild(b);
+// تهيئة التطبيق
+async function initApp() {
+    try {
+        const data = await fetchData('data.json');
+        examBank = data.exam_bank;
+        document.getElementById('loading-overlay').style.display = 'none';
+        renderChapters();
+    } catch (error) {
+        document.getElementById('loading-overlay').innerHTML = `
+            <p style="color: var(--danger)">حدث خطأ أثناء تحميل البيانات. يرجى التأكد من وجود ملف data.json</p>
+            <button onclick="location.reload()" class="btn btn-primary" style="margin-top:10px">إعادة المحاولة</button>
+        `;
+    }
+}
+
+function renderChapters() {
+    const list = document.getElementById('chapters-list');
+    list.innerHTML = '';
+    examBank.forEach((ch, index) => {
+        const card = document.createElement('div');
+        card.className = 'chapter-card';
+        card.innerHTML = `<div class="chapter-title">${ch.chapter}</div><p style="color:var(--text-muted); font-size:0.9rem">${ch.questions.length} سؤال</p>`;
+        card.onclick = () => startQuiz(index);
+        list.appendChild(card);
     });
 }
 
-// START
-function startQuiz(i){
-    currentChapter=examBank[i];
-    currentQuestions=currentChapter.questions;
-    currentIndex=0;
-    answers=new Array(currentQuestions.length).fill(null);
-
-    show('quiz-screen');
+function startQuiz(chapterIndex) {
+    currentQuestions = examBank[chapterIndex].questions;
+    currentIndex = 0;
+    userAnswers = new Array(currentQuestions.length).fill(null);
+    document.getElementById('current-chapter-title').textContent = examBank[chapterIndex].chapter;
+    
+    buildNavGrid();
     renderQuestion();
+    switchScreen('quiz-screen');
 }
 
-// QUESTION
-function renderQuestion(){
-    const q=currentQuestions[currentIndex];
-
-    document.getElementById('question-text').textContent=q.text;
-    document.getElementById('current-q-num').textContent=currentIndex+1;
-    document.getElementById('total-q-num').textContent=currentQuestions.length;
-
-    const box=document.getElementById('options-container');
-    box.innerHTML='';
-
-    Object.entries(q.options).forEach(([k,v])=>{
-        const btn=document.createElement('button');
-        btn.textContent=k+' : '+v;
-        btn.className='option-btn';
-        btn.onclick=()=>answer(k);
-        box.appendChild(btn);
+function buildNavGrid() {
+    const grid = document.getElementById('question-nav-grid');
+    grid.innerHTML = '';
+    currentQuestions.forEach((_, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'nav-num';
+        btn.textContent = i + 1;
+        btn.id = `nav-${i}`;
+        btn.onclick = () => { currentIndex = i; renderQuestion(); };
+        grid.appendChild(btn);
     });
 }
 
-// ANSWER
-function answer(k){
-    const q=currentQuestions[currentIndex];
-    answers[currentIndex]={correct:k===q.correct_answer};
+function renderQuestion() {
+    const q = currentQuestions[currentIndex];
+    const isAnswered = userAnswers[currentIndex] !== null;
+    
+    document.getElementById('question-text').textContent = q.text;
+    document.getElementById('current-q-num').textContent = currentIndex + 1;
+    document.getElementById('total-q-num').textContent = currentQuestions.length;
+    document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
 
-    if(currentIndex===currentQuestions.length-1){
-        result();
-    } else {
-        currentIndex++;
-        renderQuestion();
+    document.querySelectorAll('.nav-num').forEach(n => n.classList.remove('current'));
+    document.getElementById(`nav-${currentIndex}`).classList.add('current');
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+
+    Object.entries(q.options).forEach(([key, val]) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span class="option-letter">${key}</span> ${val}`;
+        
+        if (isAnswered) {
+            btn.disabled = true;
+            if (key === q.correct_answer) btn.classList.add('correct');
+            else if (key === userAnswers[currentIndex].selected && !userAnswers[currentIndex].isCorrect) btn.classList.add('wrong');
+        } else {
+            btn.onclick = () => selectAnswer(key, q.correct_answer);
+        }
+        container.appendChild(btn);
+    });
+
+    document.getElementById('prev-btn').disabled = currentIndex === 0;
+    const isLast = currentIndex === currentQuestions.length - 1;
+    document.getElementById('next-btn').style.display = isLast ? 'none' : 'inline-flex';
+    document.getElementById('finish-btn').style.display = isLast ? 'inline-flex' : 'none';
+}
+
+function selectAnswer(key, correct) {
+    const isCorrect = key === correct;
+    userAnswers[currentIndex] = { selected: key, isCorrect };
+    
+    document.getElementById(`nav-${currentIndex}`).classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+    renderQuestion();
+
+    if (currentIndex < currentQuestions.length - 1) {
+        setTimeout(() => { currentIndex++; renderQuestion(); }, 600);
     }
 }
 
-// RESULT
-function result(){
-    const correct=answers.filter(a=>a.correct).length;
-    const wrong=answers.length-correct;
-
-    document.getElementById('total-correct').textContent=correct;
-    document.getElementById('total-wrong').textContent=wrong;
-    document.getElementById('percentage').textContent=Math.round(correct/answers.length100)+'%';
-
-    localStorage.setItem('score', JSON.stringify({correct,wrong}));
-
-    show('result-screen');
+function showResult() {
+    const correct = userAnswers.filter(a => a?.isCorrect).length;
+    const percent = Math.round((correct / currentQuestions.length) * 100);
+    
+    document.getElementById('total-correct').textContent = correct;
+    document.getElementById('total-wrong').textContent = currentQuestions.length - correct;
+    document.getElementById('percentage').textContent = `${percent}%`;
+    document.getElementById('score-circle').style.borderColor = percent >= 50 ? 'var(--secondary)' : 'var(--danger)';
+    
+    switchScreen('result-screen');
 }
 
-// NAV
-document.getElementById('next-btn').onclick=()=>{
-    if(currentIndex<currentQuestions.length-1){
-        currentIndex++;
-        renderQuestion();
-    } else result();
-};
-
-document.getElementById('prev-btn').onclick=()=>{
-    if(currentIndex>0){
-        currentIndex--;
-        renderQuestion();
-    }
-};
-
-function show(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+function switchScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
+document.getElementById('next-btn').onclick = () => { currentIndex++; renderQuestion(); };
+document.getElementById('prev-btn').onclick = () => { currentIndex--; renderQuestion(); };
+document.getElementById('finish-btn').onclick = showResult;
+
+// وضع الليل
+document.getElementById('theme-btn').onclick = () => {
+    document.body.classList.toggle('dark');
+    document.getElementById('theme-btn').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+};
+
+initApp();
 </script>
 
 </body>
 </html>
+
