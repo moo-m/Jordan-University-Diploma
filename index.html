@@ -1,88 +1,276 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الاختبارات</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+:root {
+    --bg: #f4f7f6;
+    --card: #fff;
+    --text: #2c3e50;
+    --primary: #3498db;
+    --shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+body.dark {
+    --bg: #121212;
+    --card: #1e1e1e;
+    --text: #f1f1f1;
+    --primary: #4dabf7;
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.screen { display:none; }
+.screen.active { display:block; }
+
+.card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+/* header */
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+button {
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.primary { background: var(--primary); color:white; }
+
+/* options */
+.option {
+    display:block;
+    margin:10px 0;
+    padding:10px;
+    background: #eee;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+body.dark .option { background:#333; }
+
+.option.correct { background: green !important; color:#fff; }
+.option.wrong { background: red !important; color:#fff; }
+
+.grid {
+    display:grid;
+    gap:10px;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="app-container">
-        <!-- Start Screen -->
-        <section id="start-screen" class="screen active">
-            <h1>اختر فصلاً للبدء</h1>
-            <div id="chapters-list" class="chapters-grid">
-                <!-- Chapters will be loaded here -->
-            </div>
-        </section>
 
-        <!-- Quiz Screen -->
-        <section id="quiz-screen" class="screen">
-            <header class="quiz-header">
-                <button id="toggle-sidebar" class="icon-btn">☰</button>
-                <h2 id="current-chapter-title">اسم الفصل</h2>
-                <div class="progress-info">
-                    سؤال <span id="current-q-num">1</span> من <span id="total-q-num">10</span>
-                </div>
-            </header>
+<div class="container">
 
-            <div class="quiz-layout">
-                <!-- Sidebar -->
-                <aside id="sidebar" class="sidebar">
-                    <div class="sidebar-header">
-                        <h3>الأسئلة</h3>
-                    </div>
-                    <div id="question-nav" class="question-nav-grid">
-                        <!-- Question numbers will be loaded here -->
-                    </div>
-                </aside>
-
-                <!-- Main Quiz Content -->
-                <main class="quiz-main">
-                    <div id="question-container" class="question-card">
-                        <p id="question-text" class="question-text"></p>
-                        <div id="options-container" class="options-grid">
-                            <!-- Options will be loaded here -->
-                        </div>
-                        <div id="feedback-container" class="feedback-area hidden">
-                            <p id="correct-answer-text"></p>
-                        </div>
-                    </div>
-
-                    <footer class="quiz-footer">
-                        <button id="prev-btn" class="btn secondary">السابق</button>
-                        <button id="next-btn" class="btn primary">التالي</button>
-                    </footer>
-                </main>
-            </div>
-        </section>
-
-        <!-- Result Screen -->
-        <section id="result-screen" class="screen">
-            <div class="result-card">
-                <h2>نتيجة الاختبار</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="label">الإجابات الصحيحة:</span>
-                        <span id="total-correct" class="value correct">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">الإجابات الخاطئة:</span>
-                        <span id="total-wrong" class="value wrong">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">النسبة المئوية:</span>
-                        <span id="percentage" class="value">0%</span>
-                    </div>
-                </div>
-                <div class="result-actions">
-                    <button id="restart-btn" class="btn primary">إعادة الاختبار</button>
-                    <button id="review-wrong-btn" class="btn secondary">مراجعة الأخطاء فقط</button>
-                </div>
-            </div>
-        </section>
+<!-- START -->
+<div id="start" class="screen active">
+    <div class="header">
+        <h2>اختر الفصل</h2>
+        <button id="darkToggle">🌙</button>
     </div>
+    <div id="chapters" class="grid"></div>
+</div>
 
-    <script src="script.js"></script>
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+    <div class="card">
+        <div class="header">
+            <h3 id="chapterTitle"></h3>
+            <span id="progress"></span>
+        </div>
+
+        <h2 id="question"></h2>
+        <div id="options"></div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:10px;">
+            <button id="prev">السابق</button>
+            <button id="next" class="primary">التالي</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+    <div class="card">
+        <h2>النتيجة</h2>
+        <p>✔ الصحيح: <span id="correct"></span></p>
+        <p>✖ الخطأ: <span id="wrong"></span></p>
+        <p>📊 النسبة: <span id="percent"></span>%</p>
+
+        <button onclick="location.reload()" class="primary">إعادة</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+let data = [];
+let chapterIndex = 0;
+let qIndex = 0;
+let answers = [];
+
+const start = document.getElementById("start");
+const quiz = document.getElementById("quiz");
+const result = document.getElementById("result");
+
+const chaptersDiv = document.getElementById("chapters");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+
+const correctEl = document.getElementById("correct");
+const wrongEl = document.getElementById("wrong");
+const percentEl = document.getElementById("percent");
+
+const progress = document.getElementById("progress");
+const chapterTitle = document.getElementById("chapterTitle");
+
+async function loadData(){
+    const res = await fetch("data.json");
+    const json = await res.json();
+    data = json.exam_bank;
+    renderChapters();
+}
+
+function renderChapters(){
+    chaptersDiv.innerHTML="";
+    data.forEach((c,i)=>{
+        const b=document.createElement("button");
+        b.className="primary";
+        b.textContent=c.chapter;
+        b.onclick=()=>startQuiz(i);
+        chaptersDiv.appendChild(b);
+    });
+}
+
+function startQuiz(i){
+    chapterIndex=i;
+    qIndex=0;
+    answers=[];
+    chapterTitle.textContent=data[i].chapter;
+    show(quiz);
+    renderQuestion();
+}
+
+function show(screen){
+    [start,quiz,result].forEach(s=>s.classList.remove("active"));
+    screen.classList.add("active");
+}
+
+function renderQuestion(){
+    const q=data[chapterIndex].questions[qIndex];
+    questionEl.textContent=q.text;
+    progress.textContent=`${qIndex+1}/${data[chapterIndex].questions.length}`;
+
+    optionsEl.innerHTML="";
+    Object.entries(q.options).forEach(([k,v])=>{
+        const div=document.createElement("div");
+        div.className="option";
+        div.textContent=`${k}: ${v}`;
+
+        div.onclick=()=>{
+            answers[qIndex]=k;
+            if(k===q.correct_answer) div.classList.add("correct");
+            else div.classList.add("wrong");
+
+            saveResults();
+
+            setTimeout(()=>{
+                if(qIndex<data[chapterIndex].questions.length-1){
+                    qIndex++;
+                    renderQuestion();
+                }else{
+                    showResult();
+                }
+            },500);
+        };
+
+        optionsEl.appendChild(div);
+    });
+}
+
+function showResult(){
+    let correct=0;
+
+    data[chapterIndex].questions.forEach((q,i)=>{
+        if(answers[i]===q.correct_answer) correct++;
+    });
+
+    let total=data[chapterIndex].questions.length;
+
+    correctEl.textContent=correct;
+    wrongEl.textContent=total-correct;
+    percentEl.textContent=Math.round((correct/total)*100);
+
+    saveFinalResult(correct,total);
+
+    show(result);
+}
+
+/* 💾 حفظ التقدم */
+function saveResults(){
+    localStorage.setItem("progress",JSON.stringify({
+        chapterIndex,
+        qIndex,
+        answers
+    }));
+}
+
+/* 💾 حفظ النتيجة النهائية */
+function saveFinalResult(correct,total){
+    let history=JSON.parse(localStorage.getItem("history")||"[]");
+
+    history.push({
+        chapter:data[chapterIndex].chapter,
+        correct,
+        total,
+        date:new Date().toLocaleString()
+    });
+
+    localStorage.setItem("history",JSON.stringify(history));
+}
+
+/* 🌙 Dark Mode */
+const darkBtn=document.getElementById("darkToggle");
+
+darkBtn.onclick=()=>{
+    document.body.classList.toggle("dark");
+    localStorage.setItem("dark",document.body.classList.contains("dark"));
+};
+
+if(localStorage.getItem("dark")==="true"){
+    document.body.classList.add("dark");
+}
+
+/* init */
+loadData();
+</script>
+
 </body>
 </html>
